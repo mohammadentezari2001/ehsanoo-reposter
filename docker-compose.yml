@@ -1,0 +1,18 @@
+services:
+  reposter:
+    build: .
+    image: telegram-reposter:latest
+    container_name: telegram-reposter
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # A named volume is used because the image runs as a non-root user
+      # (uid 10001); a ./data bind mount would be owned by your host user and
+      # the bot could not write its database.  See the README for the bind-mount
+      # variant if you prefer host-visible files.
+      - reposter-data:/app/data
+    # The bot only makes outbound connections; no ports are exposed.
+
+volumes:
+  reposter-data:
